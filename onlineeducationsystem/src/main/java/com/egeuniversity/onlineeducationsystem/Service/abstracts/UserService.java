@@ -23,4 +23,7 @@ public interface UserService {
 
     String handleFileUpload(String id, MultipartFile file) throws IOException;
 
+    User signup(UserDTO userDTO);
+
+    User login(String email, String password);
 }

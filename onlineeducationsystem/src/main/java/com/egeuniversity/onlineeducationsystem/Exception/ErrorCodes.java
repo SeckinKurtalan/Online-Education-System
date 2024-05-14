@@ -12,6 +12,10 @@ public class ErrorCodes {
     public static final String E8_CODE = "E8";
     public static final String E9_CODE = "E9";
     public static final String E10_CODE = "E10";
+    public static final String E11_CODE = "E11";
+    public static final String E12_CODE = "E12";
+    public static final String E13_CODE = "E13";
+    public static final String E14_CODE = "E14";
 
     public static final String E1_MESSAGE = "Unknown fields found: ";
     public static final String E2_MESSAGE = "Invalid parameters sent.";
@@ -22,5 +26,10 @@ public class ErrorCodes {
     public static final String E7_MESSAGE = "Invalid role entered.";
     public static final String E8_MESSAGE = "An error occurred while uploading data to the database.";
     public static final String E9_MESSAGE = "An error occurred while uploading the photo.";
-    public static final String E10_MESSAGE = "User Not Found";
+    public static final String E10_MESSAGE = "User not found";
+    public static final String E11_MESSAGE = "User not found with the id {%s}";
+    public static final String E12_MESSAGE = "An error occured while trying to create the course.";
+    public static final String E13_MESSAGE = "Invalid email or password.";
+    public static final String E14_MESSAGE = "An error occured while logging in.";
+
 }

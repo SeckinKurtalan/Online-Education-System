@@ -18,4 +18,6 @@ public interface UserDal extends JpaRepository<User, String> ,JpaSpecificationEx
     Boolean existsByUsername(String username);
 
     Boolean existsByEmail(String email);
+
+    Optional<User> findByEmail(String email);
 }

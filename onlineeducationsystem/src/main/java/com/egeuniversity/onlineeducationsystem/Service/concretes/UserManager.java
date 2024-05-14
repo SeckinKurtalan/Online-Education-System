@@ -9,7 +9,6 @@ import com.egeuniversity.onlineeducationsystem.repository.UserDal;
 import com.egeuniversity.onlineeducationsystem.utility.Utility;
 import com.egeuniversity.onlineeducationsystem.data.User;
 import jakarta.persistence.criteria.Predicate;
-import org.hibernate.generator.internal.CurrentTimestampGeneration;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
@@ -46,7 +45,6 @@ public class UserManager extends Utility implements UserService {
         }
     }
 
-
     @Override
     public User addUser(User user) {
         try {
@@ -82,7 +80,7 @@ public class UserManager extends Utility implements UserService {
                 updateUser.setEmail(dto.getEmail());
             }
             if (dto.getPassword() != null) {
-                updateUser.setPassword(dto.getPassword());
+                updateUser.setPassword(dto.getPassword()); // No password hashing
             }
             if (dto.getPhotoLink() != null) {
                 updateUser.setPhoto(dto.getPhotoLink());
@@ -125,39 +123,79 @@ public class UserManager extends Utility implements UserService {
         }
 
         return userPage;
-
     }
 
-
+    @Override
     public String handleFileUpload(String id, MultipartFile file) throws IOException {
+        String fileName = file.getOriginalFilename();
+        String saveDirectory = "/home/seckin/IdeaProjects/onlineeducationsystem/files/";
+        File targetFile = new File(saveDirectory + fileName);
 
-            String fileName = file.getOriginalFilename();
-            String saveDirectory = "/home/seckin/IdeaProjects/onlineeducationsystem/files/";
-            File targetFile = new File(saveDirectory + fileName);
+        file.transferTo(targetFile);
 
-            file.transferTo(targetFile);
+        Optional<User> userOptional = userDal.findById(id);
+        if (userOptional.isEmpty()) {
+            throw new GenericException(ErrorCodes.E10_MESSAGE, ErrorCodes.E10_CODE, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        User user = userOptional.get();
 
-            Optional<User> userOptional = userDal.findById(id);
+        String fileAccessUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/files/")
+                .path(fileName)
+                .toUriString();
+        user.setPhoto(fileAccessUrl);
+
+        userDal.save(user);
+
+        return user.getName() + "," + fileAccessUrl;
+    }
+
+    @Override
+    public User signup(UserDTO userDTO) {
+        try {
+            Optional<User> existingUser = userDal.findByEmail(userDTO.getEmail());
+            if (existingUser.isPresent()) {
+                throw new RuntimeException("User already exists with this email.");
+            }
+
+            User newUser = new User();
+            newUser.setName(userDTO.getName());
+            newUser.setEmail(userDTO.getEmail());
+            newUser.setPassword(userDTO.getPassword());
+            newUser.setCreatedAt(new Date());
+            newUser.setUpdatedAt(new Date());
+
+            return userDal.save(newUser);
+        } catch (Exception e) {
+            throw new RuntimeException("Error during signup: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public User login(String email, String password) {
+        try {
+            Optional<User> userOptional = userDal.findByEmail(email);
             if (userOptional.isEmpty()) {
-                throw new GenericException(ErrorCodes.E10_MESSAGE, ErrorCodes.E10_CODE,
+                throw new GenericException(ErrorCodes.E13_MESSAGE, ErrorCodes.E13_CODE,
                         HttpStatus.INTERNAL_SERVER_ERROR);
             }
+
             User user = userOptional.get();
+            if (!password.equals(user.getPassword())) {
+                throw new GenericException(ErrorCodes.E13_MESSAGE, ErrorCodes.E13_CODE,
+                        HttpStatus.INTERNAL_SERVER_ERROR);
+            }
 
-            String fileAccessUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
-                    .path("/files/")
-                    .path(fileName)
-                    .toUriString();
-            user.setPhoto(fileAccessUrl);
-
-            userDal.save(user);
-
-            return user.getName() + "," + fileAccessUrl;
-
-
+            return user;
+        } catch (Exception e) {
+            throw new GenericException(ErrorCodes.E14_MESSAGE, ErrorCodes.E14_CODE,
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-
-
-
+    public void validatePageAndSize(int page, int size) {
+        if (page < 1 || size < 1) {
+            throw new IllegalArgumentException("Invalid page or size parameter");
+        }
+    }
 }

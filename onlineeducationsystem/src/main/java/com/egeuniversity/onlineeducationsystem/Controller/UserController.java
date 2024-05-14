@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.management.relation.Role;
 import java.util.List;
 
 @RestController
@@ -67,11 +66,10 @@ public class UserController {
         try {
             User updatedUser = userService.updateUser(id, dto);
             return ResponseEntity.ok(updatedUser);
-        }catch (GenericException ge) {
+        } catch (GenericException ge) {
             throw ge;
-        }
-        catch (Exception e) {
-            throw new GenericException(ErrorCodes.E7_MESSAGE,ErrorCodes.E7_CODE, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            throw new GenericException(ErrorCodes.E7_MESSAGE, ErrorCodes.E7_CODE, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -96,13 +94,35 @@ public class UserController {
         } catch (GenericException ge) {
             throw ge;
         } catch (Exception e) {
-            throw new GenericException(ErrorCodes.E9_MESSAGE,ErrorCodes.E9_CODE, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new GenericException(ErrorCodes.E9_MESSAGE, ErrorCodes.E9_CODE, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("/testException")
     public ResponseEntity<GenericException> testException() {
         throw new GenericException(ErrorCodes.E5_CODE, "TEST EXCEPTION", HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/signup")
+    @Operation(summary = "Signup")
+    public ResponseEntity<User> signup(@RequestBody UserDTO userDTO) {
+        try {
+            User newUser = userService.signup(userDTO);
+            return ResponseEntity.ok(newUser);
+        } catch (Exception e) {
+            throw new RuntimeException("Error during signup: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/login")
+    @Operation(summary = "Login")
+    public ResponseEntity<User> login(@RequestParam String email, @RequestParam String password) {
+        try {
+            User user = userService.login(email, password);
+            return ResponseEntity.ok(user);
+        } catch (Exception e) {
+            throw new RuntimeException("Error during login: " + e.getMessage());
+        }
     }
 
     public User convertDtoToData(UserDTO dto) {
