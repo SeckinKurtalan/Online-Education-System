@@ -5,21 +5,24 @@ import com.egeuniversity.onlineeducationsystem.Exception.GenericException;
 import com.egeuniversity.onlineeducationsystem.Service.abstracts.CourseService;
 import com.egeuniversity.onlineeducationsystem.data.Course;
 import com.egeuniversity.onlineeducationsystem.dto.CourseDTO;
+import com.egeuniversity.onlineeducationsystem.dto.CourseSearchDTO;
 import com.egeuniversity.onlineeducationsystem.repository.UserDal;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
+@Tag(name = "Course Service")
 @RequestMapping("api/courses")
 public class CourseController {
 
@@ -46,6 +49,64 @@ public class CourseController {
         }
     }
 
+    @PutMapping("/{courseId}/add-user/{userId}")
+    @Operation(summary = "Add User to Course")
+    public ResponseEntity<Course> addUserToCourse(@PathVariable String courseId, @PathVariable String userId) {
+        try {
+            Course updatedCourse = courseService.addUserToCourse(courseId, userId);
+            return ResponseEntity.ok(updatedCourse);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Get Course By Id")
+    public ResponseEntity<Course> getCourseById(@PathVariable String id) {
+        try {
+            Course course = courseService.getCourseById(id);
+            return ResponseEntity.ok(course);
+        } catch (Exception e) {
+            logger.error("Error getting course by id", e);
+            throw new GenericException(ErrorCodes.E13_MESSAGE, ErrorCodes.E13_CODE, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "Update Course By Id")
+    public ResponseEntity<Course> updateCourse(@PathVariable String id, @RequestBody @Valid CourseDTO dto) {
+        try {
+            Course updatedCourse = courseService.updateCourse(id, convertDtoToCourse(dto));
+            return ResponseEntity.ok(updatedCourse);
+        } catch (Exception e) {
+            logger.error("Error updating course", e);
+            throw new GenericException(ErrorCodes.E14_MESSAGE, ErrorCodes.E14_CODE, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Delete Course By Id")
+    public ResponseEntity<String> deleteCourse(@PathVariable String id) {
+        try {
+            courseService.deleteCourse(id);
+            return ResponseEntity.ok("Course deleted successfully");
+        } catch (Exception e) {
+            logger.error("Error deleting course", e);
+            throw new GenericException(ErrorCodes.E15_MESSAGE, ErrorCodes.E15_CODE, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/search")
+    @Operation(summary = "Search Courses")
+    public ResponseEntity<List<Course>> searchCourses(@RequestBody CourseSearchDTO dto) {
+        try {
+            Page<Course> courses = courseService.getAllCourses(dto);
+            return ResponseEntity.ok(courses.getContent());
+        } catch (Exception e) {
+            logger.error("Error searching courses", e);
+            throw new GenericException(ErrorCodes.E16_MESSAGE, ErrorCodes.E16_CODE, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     private Course convertDtoToCourse(CourseDTO dto) {
         Course course = new Course();
@@ -64,5 +125,4 @@ public class CourseController {
 
         return course;
     }
-
 }

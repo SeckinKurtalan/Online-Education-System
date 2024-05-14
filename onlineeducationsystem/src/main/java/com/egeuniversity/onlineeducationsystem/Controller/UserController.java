@@ -4,6 +4,7 @@ import com.egeuniversity.onlineeducationsystem.Exception.ErrorCodes;
 import com.egeuniversity.onlineeducationsystem.Exception.GenericException;
 import com.egeuniversity.onlineeducationsystem.Service.abstracts.UserService;
 import com.egeuniversity.onlineeducationsystem.dto.UserDTO;
+import com.egeuniversity.onlineeducationsystem.dto.UserLoginDTO;
 import com.egeuniversity.onlineeducationsystem.dto.UserSearchDTO;
 import com.egeuniversity.onlineeducationsystem.data.User;
 import io.swagger.v3.oas.annotations.Operation;
@@ -116,9 +117,9 @@ public class UserController {
 
     @PostMapping("/login")
     @Operation(summary = "Login")
-    public ResponseEntity<User> login(@RequestParam String email, @RequestParam String password) {
+    public ResponseEntity<User> login(@RequestBody UserLoginDTO dto) {
         try {
-            User user = userService.login(email, password);
+            User user = userService.login(dto.getEmail(), dto.getPassword());
             return ResponseEntity.ok(user);
         } catch (Exception e) {
             throw new RuntimeException("Error during login: " + e.getMessage());

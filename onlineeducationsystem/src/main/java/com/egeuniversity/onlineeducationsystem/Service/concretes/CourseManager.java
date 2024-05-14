@@ -2,8 +2,10 @@ package com.egeuniversity.onlineeducationsystem.Service.concretes;
 
 import com.egeuniversity.onlineeducationsystem.Service.abstracts.CourseService;
 import com.egeuniversity.onlineeducationsystem.data.Course;
+import com.egeuniversity.onlineeducationsystem.data.User;
 import com.egeuniversity.onlineeducationsystem.dto.CourseSearchDTO;
 import com.egeuniversity.onlineeducationsystem.repository.CourseDal;
+import com.egeuniversity.onlineeducationsystem.repository.UserDal;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,6 +25,9 @@ public class CourseManager implements CourseService {
     @Autowired
     private CourseDal courseDal;
 
+    @Autowired
+    private UserDal userDal;
+
     @Override
     public Course addCourse(Course course) {
         try {
@@ -38,11 +43,23 @@ public class CourseManager implements CourseService {
             Optional<Course> optionalCourse = courseDal.findById(id);
             if (optionalCourse.isPresent()) {
                 Course course = optionalCourse.get();
-                course.setTitle(courseDetails.getTitle());
-                course.setDescription(courseDetails.getDescription());
-                course.setAttachment(courseDetails.getAttachment());
-                course.setCategory(courseDetails.getCategory());
-                course.setPrice(courseDetails.getPrice());
+
+                if (courseDetails.getTitle() != null) {
+                    course.setTitle(courseDetails.getTitle());
+                }
+                if (courseDetails.getDescription() != null) {
+                    course.setDescription(courseDetails.getDescription());
+                }
+                if (courseDetails.getAttachment() != null) {
+                    course.setAttachment(courseDetails.getAttachment());
+                }
+                if (courseDetails.getCategory() != null) {
+                    course.setCategory(courseDetails.getCategory());
+                }
+                if (courseDetails.getPrice() != null) {
+                    course.setPrice(courseDetails.getPrice());
+                }
+
                 course.setUpdatedAt(getNow());
 
                 return courseDal.save(course);
@@ -112,6 +129,37 @@ public class CourseManager implements CourseService {
         } catch (Exception e) {
             throw new RuntimeException("Failed to delete course: " + e.getMessage(), e);
         }
+    }
+
+    @Override
+    public Course addUserToCourse(String courseId, String userId) {
+        try {
+            Optional<Course> optionalCourse = courseDal.findById(courseId);
+            if (optionalCourse.isEmpty()) {
+                throw new RuntimeException("Course not found with id: " + courseId);
+            }
+
+            Course course = optionalCourse.get();
+            if (!userExists(userId)) {
+                throw new RuntimeException("User not found with id: " + userId);
+            }
+
+            Optional<User> optionalUser = userDal.findById(userId);
+            if (optionalUser.isEmpty()) {
+                throw new RuntimeException("User not found with id: " + userId);
+            }
+
+            User user = optionalUser.get();
+            course.getStudents().add(user);
+
+            return courseDal.save(course);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to add user to course: " + e.getMessage(), e);
+        }
+    }
+
+    public boolean userExists(String userId) {
+        return userDal.existsById(userId);
     }
 
     private void validatePageAndSize(int page, int size) {

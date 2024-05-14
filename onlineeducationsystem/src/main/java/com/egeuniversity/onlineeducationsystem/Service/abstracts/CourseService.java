@@ -11,5 +11,5 @@ public interface CourseService {
     Course getCourseById(String id);
     Page<Course> getAllCourses(CourseSearchDTO dto) throws Exception;
     void deleteCourse(String id);
-
+    Course addUserToCourse(String courseId, String userId);
 }
