@@ -19,6 +19,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -33,7 +34,7 @@ public class UserManager extends Utility implements UserService {
     }
 
     @Override
-    public User getUser(String userId) {
+    public User getUser(Long userId) {
         try {
             Optional<User> user = userDal.findById(userId);
             if (user.isEmpty()) {
@@ -55,7 +56,7 @@ public class UserManager extends Utility implements UserService {
     }
 
     @Override
-    public void removeUser(String userId) {
+    public void removeUser(Long userId) {
         try {
             userDal.deleteById(userId);
         } catch (Exception e) {
@@ -64,7 +65,7 @@ public class UserManager extends Utility implements UserService {
     }
 
     @Override
-    public User updateUser(String id, UserDTO dto) {
+    public User updateUser(Long id, UserDTO dto) {
         try {
             Optional<User> existingUser = userDal.findById(id);
             if (existingUser.isEmpty()) {
@@ -126,7 +127,7 @@ public class UserManager extends Utility implements UserService {
     }
 
     @Override
-    public String handleFileUpload(String id, MultipartFile file) throws IOException {
+    public String handleFileUpload(Long id, MultipartFile file) throws IOException {
         String fileName = file.getOriginalFilename();
         String saveDirectory = "/home/seckin/IdeaProjects/onlineeducationsystem/files/";
         File targetFile = new File(saveDirectory + fileName);
@@ -162,8 +163,8 @@ public class UserManager extends Utility implements UserService {
             newUser.setName(userDTO.getName());
             newUser.setEmail(userDTO.getEmail());
             newUser.setPassword(userDTO.getPassword());
-            newUser.setCreatedAt(new Date());
-            newUser.setUpdatedAt(new Date());
+            newUser.setCreatedAt(LocalDateTime.now());
+            newUser.setUpdatedAt(LocalDateTime.now());
 
             return userDal.save(newUser);
         } catch (Exception e) {

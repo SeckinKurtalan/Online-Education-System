@@ -3,12 +3,11 @@ package com.egeuniversity.onlineeducationsystem.Controller;
 import com.egeuniversity.onlineeducationsystem.Exception.ErrorCodes;
 import com.egeuniversity.onlineeducationsystem.Exception.GenericException;
 import com.egeuniversity.onlineeducationsystem.Service.abstracts.UserService;
-import com.egeuniversity.onlineeducationsystem.dto.UserDTO;
-import com.egeuniversity.onlineeducationsystem.dto.UserLoginDTO;
-import com.egeuniversity.onlineeducationsystem.dto.UserSearchDTO;
 import com.egeuniversity.onlineeducationsystem.data.User;
+import com.egeuniversity.onlineeducationsystem.dto.UserDTO;
+import com.egeuniversity.onlineeducationsystem.dto.UserSearchDTO;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,20 +16,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@Tag(name = "User Service")
-@RequestMapping("api/users")
+@RequestMapping("/api/user")
+@AllArgsConstructor
 public class UserController {
 
     private final UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
-
     @GetMapping("/{id}")
     @Operation(summary = "Get User By Id")
-    public ResponseEntity<User> getUser(@PathVariable String id) {
+    public ResponseEntity<User> getUser(@PathVariable Long id) {
         try {
             User user = userService.getUser(id);
             return ResponseEntity.ok(user);
@@ -52,7 +48,7 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete User")
-    public ResponseEntity<String> removeUser(@PathVariable(value = "id") String id) {
+    public ResponseEntity<String> removeUser(@PathVariable(value = "id") Long id) {
         try {
             userService.removeUser(id);
             return ResponseEntity.ok("User removed successfully");
@@ -63,7 +59,7 @@ public class UserController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update User By Id")
-    public ResponseEntity<User> updateUser(@PathVariable(value = "id") String id, @RequestBody UserDTO dto ) {
+    public ResponseEntity<User> updateUser(@PathVariable(value = "id") Long id, @RequestBody UserDTO dto ) {
         try {
             User updatedUser = userService.updateUser(id, dto);
             return ResponseEntity.ok(updatedUser);
@@ -87,7 +83,7 @@ public class UserController {
 
     @PutMapping("/{id}/upload-photo")
     @Operation(summary = "Upload User Photo")
-    public ResponseEntity<String> uploadPhoto(@PathVariable(value = "id") String id,
+    public ResponseEntity<String> uploadPhoto(@PathVariable(value = "id") Long id,
                                               @RequestParam("photo") MultipartFile photo) {
         try {
             String[] response = userService.handleFileUpload(id, photo).split(",");
@@ -115,6 +111,7 @@ public class UserController {
         }
     }
 
+    /*
     @PostMapping("/login")
     @Operation(summary = "Login")
     public ResponseEntity<User> login(@RequestBody UserLoginDTO dto) {
@@ -125,7 +122,7 @@ public class UserController {
             throw new RuntimeException("Error during login: " + e.getMessage());
         }
     }
-
+    */
     public User convertDtoToData(UserDTO dto) {
         if (dto == null || dto.getName() == null || dto.getName().isEmpty()) {
             throw new RuntimeException("UserDTO is missing or name is empty.");
@@ -137,5 +134,6 @@ public class UserController {
         user.setPassword(dto.getPassword());
         return user;
     }
+
 
 }

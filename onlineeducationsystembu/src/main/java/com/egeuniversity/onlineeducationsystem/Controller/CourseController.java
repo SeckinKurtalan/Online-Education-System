@@ -1,5 +1,6 @@
 package com.egeuniversity.onlineeducationsystem.Controller;
 
+import com.egeuniversity.onlineeducationsystem.utility.Utility;
 import com.egeuniversity.onlineeducationsystem.Exception.ErrorCodes;
 import com.egeuniversity.onlineeducationsystem.Exception.GenericException;
 import com.egeuniversity.onlineeducationsystem.Service.abstracts.CourseService;
@@ -13,7 +14,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +31,6 @@ public class CourseController {
 
     private static final Logger logger = LoggerFactory.getLogger(CourseController.class);
 
-    @Autowired
     public CourseController(CourseService courseService, UserDal userDal) {
         this.courseService = courseService;
         this.userDal = userDal;
@@ -51,7 +50,7 @@ public class CourseController {
 
     @PutMapping("/{courseId}/add-user/{userId}")
     @Operation(summary = "Add User to Course")
-    public ResponseEntity<Course> addUserToCourse(@PathVariable String courseId, @PathVariable String userId) {
+    public ResponseEntity<Course> addUserToCourse(@PathVariable String courseId, @PathVariable Long userId) {
         try {
             Course updatedCourse = courseService.addUserToCourse(courseId, userId);
             return ResponseEntity.ok(updatedCourse);
@@ -90,6 +89,8 @@ public class CourseController {
         try {
             courseService.deleteCourse(id);
             return ResponseEntity.ok("Course deleted successfully");
+        } catch (GenericException ge) {
+            throw ge;
         } catch (Exception e) {
             logger.error("Error deleting course", e);
             throw new GenericException(ErrorCodes.E15_MESSAGE, ErrorCodes.E15_CODE, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -108,6 +109,7 @@ public class CourseController {
         }
     }
 
+
     private Course convertDtoToCourse(CourseDTO dto) {
         Course course = new Course();
         course.setTitle(dto.getTitle());
@@ -116,12 +118,13 @@ public class CourseController {
         course.setCategory(dto.getCategory());
         course.setPrice(dto.getPrice());
 
-        if (userDal.findById(dto.getCreatorId()).isEmpty()) {
-            throw new GenericException(String.format(ErrorCodes.E11_MESSAGE, dto.getCreatorId()), ErrorCodes.E11_CODE,
+        if (userDal.findById(Utility.getUserIdFromToken()).isEmpty()) {
+            throw new GenericException(String.format(ErrorCodes.E11_MESSAGE, Utility.getUserIdFromToken()),
+                    ErrorCodes.E11_CODE,
                     HttpStatus.NOT_FOUND);
         }
 
-        course.setCreator(userDal.findById(dto.getCreatorId()).get());
+        course.setCreator(userDal.findById(Utility.getUserIdFromToken()).get());
 
         return course;
     }

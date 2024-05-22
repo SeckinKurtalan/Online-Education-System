@@ -1,23 +1,29 @@
 package com.egeuniversity.onlineeducationsystem.Service.concretes;
 
+import com.egeuniversity.onlineeducationsystem.Exception.ErrorCodes;
+import com.egeuniversity.onlineeducationsystem.Exception.GenericException;
 import com.egeuniversity.onlineeducationsystem.Service.abstracts.CourseService;
 import com.egeuniversity.onlineeducationsystem.data.Course;
 import com.egeuniversity.onlineeducationsystem.data.User;
 import com.egeuniversity.onlineeducationsystem.dto.CourseSearchDTO;
-import com.egeuniversity.onlineeducationsystem.repository.CourseDal;
 import com.egeuniversity.onlineeducationsystem.repository.UserDal;
+import com.egeuniversity.onlineeducationsystem.utility.Utility;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import com.egeuniversity.onlineeducationsystem.repository.CourseDal;
 
 import static com.egeuniversity.onlineeducationsystem.utility.Utility.getNow;
+
 
 @Service
 public class CourseManager implements CourseService {
@@ -40,6 +46,7 @@ public class CourseManager implements CourseService {
     @Override
     public Course updateCourse(String id, Course courseDetails) {
         try {
+            checkIfTheOperationIsAllowed(id);
             Optional<Course> optionalCourse = courseDal.findById(id);
             if (optionalCourse.isPresent()) {
                 Course course = optionalCourse.get();
@@ -121,18 +128,21 @@ public class CourseManager implements CourseService {
     @Override
     public void deleteCourse(String id) {
         try {
+            checkIfTheOperationIsAllowed(id);
             if (courseDal.existsById(id)) {
                 courseDal.deleteById(id);
             } else {
                 throw new RuntimeException("Course not found with id: " + id);
             }
+        } catch (GenericException e) {
+            throw e;
         } catch (Exception e) {
             throw new RuntimeException("Failed to delete course: " + e.getMessage(), e);
         }
     }
 
     @Override
-    public Course addUserToCourse(String courseId, String userId) {
+    public Course addUserToCourse(String courseId, Long userId) {
         try {
             Optional<Course> optionalCourse = courseDal.findById(courseId);
             if (optionalCourse.isEmpty()) {
@@ -158,7 +168,17 @@ public class CourseManager implements CourseService {
         }
     }
 
-    public boolean userExists(String userId) {
+    private void checkIfTheOperationIsAllowed(String courseId){
+        if (courseDal.findById(courseId).isPresent()){
+            Long courseOwner = courseDal.findById(courseId).get().getCreator().getId();
+            Long operationOwner = Utility.getUserIdFromToken();
+            if (!courseOwner.equals(operationOwner)){
+               throw new GenericException(ErrorCodes.E17_MESSAGE,ErrorCodes.E17_CODE, HttpStatus.UNAUTHORIZED);
+            }
+        }
+    }
+
+    public boolean userExists(Long userId) {
         return userDal.existsById(userId);
     }
 

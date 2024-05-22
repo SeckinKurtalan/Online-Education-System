@@ -18,6 +18,7 @@ public class ErrorCodes {
     public static final String E14_CODE = "E14";
     public static final String E15_CODE = "E15";
     public static final String E16_CODE = "E16";
+    public static final String E17_CODE = "E17";
 
     public static final String E1_MESSAGE = "Unknown fields found: ";
     public static final String E2_MESSAGE = "Invalid parameters sent.";
@@ -35,4 +36,5 @@ public class ErrorCodes {
     public static final String E14_MESSAGE = "An error occured while logging in.";
     public static final String E15_MESSAGE = "An error occured while deleting the course.";
     public static final String E16_MESSAGE = "An error occured while searching courses.";
+    public static final String E17_MESSAGE = "You are not authorized to perform this action.";
 }
