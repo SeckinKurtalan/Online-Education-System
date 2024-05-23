@@ -48,11 +48,11 @@ public class CourseController {
         }
     }
 
-    @PutMapping("/{courseId}/add-user/{userId}")
+    @PutMapping("/{courseId}/add-user")
     @Operation(summary = "Add User to Course")
-    public ResponseEntity<Course> addUserToCourse(@PathVariable String courseId, @PathVariable Long userId) {
+    public ResponseEntity<Course> addUserToCourse(@PathVariable String courseId) {
         try {
-            Course updatedCourse = courseService.addUserToCourse(courseId, userId);
+            Course updatedCourse = courseService.addUserToCourse(courseId, Utility.getUserIdFromToken());
             return ResponseEntity.ok(updatedCourse);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
