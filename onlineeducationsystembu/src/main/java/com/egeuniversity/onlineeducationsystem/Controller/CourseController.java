@@ -55,7 +55,7 @@ public class CourseController {
             Course updatedCourse = courseService.addUserToCourse(courseId, Utility.getUserIdFromToken());
             return ResponseEntity.ok(updatedCourse);
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            throw new GenericException(ErrorCodes.E24_MESSAGE, ErrorCodes.E24_CODE, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -67,7 +67,7 @@ public class CourseController {
             return ResponseEntity.ok(course);
         } catch (Exception e) {
             logger.error("Error getting course by id", e);
-            throw new GenericException(ErrorCodes.E13_MESSAGE, ErrorCodes.E13_CODE, HttpStatus.NOT_FOUND);
+            throw new GenericException(ErrorCodes.E18_MESSAGE, ErrorCodes.E18_CODE, HttpStatus.NOT_FOUND);
         }
     }
 
@@ -79,7 +79,7 @@ public class CourseController {
             return ResponseEntity.ok(updatedCourse);
         } catch (Exception e) {
             logger.error("Error updating course", e);
-            throw new GenericException(ErrorCodes.E14_MESSAGE, ErrorCodes.E14_CODE, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new GenericException(ErrorCodes.E20_MESSAGE, ErrorCodes.E20_CODE, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

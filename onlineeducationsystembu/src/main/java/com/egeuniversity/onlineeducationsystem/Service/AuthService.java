@@ -64,7 +64,6 @@ public class AuthService {
         return ResponseEntity.ok(new JwtResponse(jwt,
                 userDetails.getId(),
                 currentUser.getName(),
-                currentUser.getSurname(),
                 userDetails.getEmail(),
                 roles,
                 "Login success"));
@@ -80,7 +79,6 @@ public class AuthService {
         // Create new user's account
         User user = new User(
                 signUpRequest.getName(),
-                signUpRequest.getSurname() != null ? signUpRequest.getSurname() : "",
                 signUpRequest.getEmail(),
                 encoder.encode(signUpRequest.getPassword()));
 
@@ -123,7 +121,6 @@ public class AuthService {
             return new JwtResponse(token,
                     userDetails.getId(),
                     currentUser.getName(),
-                    currentUser.getSurname(),
                     userDetails.getEmail(),
                     userDetails.getAuthorities().stream(
                             ).map(GrantedAuthority::getAuthority

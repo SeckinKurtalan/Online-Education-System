@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 import com.egeuniversity.onlineeducationsystem.repository.CourseDal;
 
 import static com.egeuniversity.onlineeducationsystem.utility.Utility.getNow;
@@ -71,19 +72,21 @@ public class CourseManager implements CourseService {
 
                 return courseDal.save(course);
             } else {
-                throw new RuntimeException("Course not found with id: " + id);
+                throw new GenericException(
+                        String.format(ErrorCodes.E19_MESSAGE, id), ErrorCodes.E19_CODE, HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
-            throw new RuntimeException("Failed to update course: " + e.getMessage(), e);
+            throw new GenericException(ErrorCodes.E20_MESSAGE, ErrorCodes.E20_CODE, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @Override
     public Course getCourseById(String id) {
         try {
-            return courseDal.findById(id).orElseThrow(() -> new RuntimeException("Course not found with id: " + id));
+            return courseDal.findById(id).orElseThrow(() -> new GenericException(
+                    String.format(ErrorCodes.E19_MESSAGE, id), ErrorCodes.E19_CODE, HttpStatus.NOT_FOUND));
         } catch (Exception e) {
-            throw new RuntimeException("Failed to retrieve course: " + e.getMessage(), e);
+            throw new GenericException(ErrorCodes.E18_MESSAGE, ErrorCodes.E18_CODE, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -119,7 +122,7 @@ public class CourseManager implements CourseService {
         try {
             coursePage = courseDal.findAll(spec, pageRequest);
         } catch (Exception e) {
-            throw new RuntimeException("Error getting courses.");
+            throw new GenericException(ErrorCodes.E16_MESSAGE, ErrorCodes.E16_CODE, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return coursePage;
@@ -168,12 +171,12 @@ public class CourseManager implements CourseService {
         }
     }
 
-    private void checkIfTheOperationIsAllowed(String courseId){
-        if (courseDal.findById(courseId).isPresent()){
+    private void checkIfTheOperationIsAllowed(String courseId) {
+        if (courseDal.findById(courseId).isPresent()) {
             Long courseOwner = courseDal.findById(courseId).get().getCreator().getId();
             Long operationOwner = Utility.getUserIdFromToken();
-            if (!courseOwner.equals(operationOwner)){
-               throw new GenericException(ErrorCodes.E17_MESSAGE,ErrorCodes.E17_CODE, HttpStatus.UNAUTHORIZED);
+            if (!courseOwner.equals(operationOwner)) {
+                throw new GenericException(ErrorCodes.E17_MESSAGE, ErrorCodes.E17_CODE, HttpStatus.UNAUTHORIZED);
             }
         }
     }

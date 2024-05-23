@@ -15,7 +15,6 @@ public class AddUserRequest {
     public User toUser() {
         User user = new User();
         user.setName(name);
-        user.setSurname(surname);
         return user;
     }
 }

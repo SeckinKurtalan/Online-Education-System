@@ -13,7 +13,6 @@ public class BasicUserResponse {
 
     public BasicUserResponse(User user) {
         this.name = user.getName() != null ? user.getName() : "";
-        this.surname = user.getSurname() != null ? user.getSurname() : "";
         this.email = user.getEmail() != null ? user.getEmail() : "";
     }
 }

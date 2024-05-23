@@ -1,6 +1,9 @@
 package com.egeuniversity.onlineeducationsystem.utility;
 
+import com.egeuniversity.onlineeducationsystem.Exception.ErrorCodes;
+import com.egeuniversity.onlineeducationsystem.Exception.GenericException;
 import com.egeuniversity.onlineeducationsystem.security.services.UserDetailsImpl;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -11,9 +14,11 @@ public abstract class Utility {
 
     public void validatePageAndSize(int page, int size) throws Exception {
         if (page <= 0) {
-            throw new RuntimeException("Error: Invalid page number. Page must be greater than 0.");
+            throw new GenericException(String.format(ErrorCodes.E26_MESSAGE,"page","Page"),ErrorCodes.E26_CODE,
+                    HttpStatus.BAD_REQUEST);
         } else if (size <= 0) {
-            throw new RuntimeException("Error: Invalid size number. Size must be greater than 0.");
+            throw new GenericException(String.format(ErrorCodes.E26_MESSAGE,"size","Size"),ErrorCodes.E26_CODE,
+                    HttpStatus.BAD_REQUEST);
         }
     }
 

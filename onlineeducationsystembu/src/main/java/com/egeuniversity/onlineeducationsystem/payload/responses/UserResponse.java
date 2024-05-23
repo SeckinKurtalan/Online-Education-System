@@ -16,7 +16,6 @@ public class UserResponse {
 
     public UserResponse(User user) {
         this.name = user.getName() != null ? user.getName() : "";
-        this.surname = user.getSurname() != null ? user.getSurname() : "";
         this.email = user.getEmail() != null ? user.getEmail() : "";
         this.role = user.getRoles().stream().findFirst().get().getName();
     }

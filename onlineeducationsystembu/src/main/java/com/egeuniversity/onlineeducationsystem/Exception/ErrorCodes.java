@@ -19,6 +19,15 @@ public class ErrorCodes {
     public static final String E15_CODE = "E15";
     public static final String E16_CODE = "E16";
     public static final String E17_CODE = "E17";
+    public static final String E18_CODE = "E18";
+    public static final String E19_CODE = "E19";
+    public static final String E20_CODE = "E20";
+    public static final String E21_CODE = "E21";
+    public static final String E22_CODE = "E22";
+    public static final String E23_CODE = "E23";
+    public static final String E24_CODE = "E24";
+    public static final String E25_CODE = "E25";
+    public static final String E26_CODE = "E26";
 
     public static final String E1_MESSAGE = "Unknown fields found: ";
     public static final String E2_MESSAGE = "Invalid parameters sent.";
@@ -37,4 +46,13 @@ public class ErrorCodes {
     public static final String E15_MESSAGE = "An error occured while deleting the course.";
     public static final String E16_MESSAGE = "An error occured while searching courses.";
     public static final String E17_MESSAGE = "You are not authorized to perform this action.";
+    public static final String E18_MESSAGE = "Failed to retrieve course.";
+    public static final String E19_MESSAGE = "Course not found with id: {%s}";
+    public static final String E20_MESSAGE = "An error occured while updating the course.";
+    public static final String E21_MESSAGE = "An error occured while login in.";
+    public static final String E22_MESSAGE = "An error occured while signing up.";
+    public static final String E23_MESSAGE = "An error occured while refreshing the token";
+    public static final String E24_MESSAGE = "An error occured while adding the user to the course.";
+    public static final String E25_MESSAGE = "Cannot set user authentication.";
+    public static final String E26_MESSAGE = "Error: Invalid {%s} number. {%s} must be greater than 0.";
 }
