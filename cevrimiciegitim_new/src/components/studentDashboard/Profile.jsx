@@ -95,7 +95,7 @@ const Profile = () => {
                     <dt className="mb-1 text-gray-500 md:text-lg dark:text-gray-400">
                       Gender
                     </dt>
-                    <dd className="text-lg font-semibold">Male</dd>
+                    <dd className="text-lg font-semibold">{data.gender}</dd>
                   </div>
                 </dl>
               </div>
