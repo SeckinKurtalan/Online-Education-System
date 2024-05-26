@@ -93,6 +93,9 @@ public class UserManager extends Utility implements UserService {
             if(dto.getDateOfBirth() != null){
                 updateUser.setDateOfBirth(dto.getDateOfBirth());
             }
+            if(dto.getPhoneNumber() != null){
+                updateUser.setPhoneNumber(dto.getPhoneNumber());
+            }
 
             return userDal.save(updateUser);
 
