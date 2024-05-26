@@ -3,7 +3,6 @@ import courses from "../data/courses.json";
 
 const Course = () => {
   const data = courses.courses[0];
-  console.log(data);
   return (
     <div className="container mx-auto px-4 py-8 bg-gradient-to-br">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

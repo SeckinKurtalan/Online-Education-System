@@ -19,10 +19,8 @@ const SignIn = () => {
     const token = localStorage.getItem("token");
     const role = localStorage.getItem("role");
     const id = localStorage.getItem("id");
-    console.log("sdaads", role);
-    console.log("sdaads", id);
+
     if (token) {
-      console.log(token);
       if (role === "ROLE_ADMIN") {
         navigate("/instructor-dashboard");
       } else if (role === "ROLE_USER") {
@@ -98,7 +96,6 @@ const SignIn = () => {
                       password: password,
                     });
                     useUserStore.getState().login(token);
-                    console.log("token", useUserStore.getState().token);
                     isLoggedIn();
                   }}
                   type="submit"

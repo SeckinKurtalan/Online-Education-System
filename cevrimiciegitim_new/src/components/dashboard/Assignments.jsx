@@ -44,8 +44,6 @@ const Assignment = () => {
   // Assignment'ı gönderme işlemi
   const handleSubmit = () => {
     // Seçilen öğrencilere assignment'ı gönder
-    console.log("Seçilen kurs:", selectedCourse);
-    console.log("Gönderilen dosya:", fileName);
     // Burada assignment gönderme işlemi gerçekleştirilebilir, örneğin bir API çağrısı yapılabilir
   };
 

@@ -10,14 +10,14 @@ import {
   FaTrash,
 } from "react-icons/fa";
 import NewCourse from "./NewCourse";
+import { createChapter } from "../../../../api/sign";
+import { useEffect } from "react";
 
-const ChapterCreateModal = ({ setIsCreateModal }) => {
-  const data = {
-    chapterTitle: "This is example Title",
-    chapterDescription:
-      "This is example Description long text. this is a long text.  is example Description long text. this is a long text. ",
-  };
-
+const ChapterCreateModal = ({ setIsCreateModal, setChaptersMain }) => {
+  const token = localStorage.getItem("token");
+  const chapters = [];
+  const [data, setData] = useState([]);
+  const [chapter, setChapter] = useState("");
   const [chapterTitle, setChapterTitle] = useState(data.chapterTitle || "");
   const [isTitleEdit, setIsTitleEdit] = useState(false);
 
@@ -154,7 +154,6 @@ const ChapterCreateModal = ({ setIsCreateModal }) => {
                       }}
                       onChange={(e) => {
                         setVideo(e.target.files[0]);
-                        console.log(e.target.files[0]);
                       }}
                     />
                   </div>
@@ -191,8 +190,19 @@ const ChapterCreateModal = ({ setIsCreateModal }) => {
           <div className="w-full gap-8 flex mt-4">
             <button
               onClick={() => {
-                alert("Changes Saved");
+                (async () => {
+                  const response = await createChapter(token, {
+                    title: chapterTitle,
+                    description: chapterDescription,
+                  });
+                  console.log("id", response.id);
+                  setChapter(response.id);
+                  chapters.push([...chapters, response.id]);
+                  setChaptersMain(chapters);
+                })();
+
                 setIsCreateModal(false);
+                alert("Changes Saved");
               }}
               className="bg-green-600 my-2 mx-6 w-full text-white px-3 py-3 rounded-bl-xl"
             >

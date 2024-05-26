@@ -24,7 +24,6 @@ import { useUserStore } from "../data/user";
 const Team = () => {
   const token = localStorage.getItem("token");
   const id = localStorage.getItem("id");
-  console.log("token", token, id);
   return (
     <section className="teamComponent text-gray-700 body-font">
       <Navbar></Navbar>

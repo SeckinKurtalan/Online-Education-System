@@ -2,8 +2,24 @@ import React, { useState } from "react";
 import maleMentor from "../../../assets/male-mentor.jpeg";
 import { FaStar } from "react-icons/fa";
 import EnrolledCourses from "../EnrolledCourses";
-
+import { useEffect } from "react";
+import { getUser } from "../../../api/sign";
 const Dashboard = ({ setCurrentPage }) => {
+  const [courseTitleMain, setCourseTitleMain] = useState("Default Title");
+
+  const [isNewCourse, setIsNewCourse] = useState(false);
+
+  const [data, setData] = useState([]);
+  const token = localStorage.getItem("token");
+  const x = async () => {
+    const data1 = await getUser(token);
+    setData(data1);
+  };
+
+  useEffect(() => {
+    x();
+  }, []);
+
   return (
     <>
       <div className="relative w-full">
@@ -11,13 +27,13 @@ const Dashboard = ({ setCurrentPage }) => {
           <div className="flex justify-between bg-gray-dark rounded-full p-10 items-center mb-10">
             <div className="flex gap-6">
               <img
-                src={maleMentor}
+                src={data.photo}
                 alt="Mentor"
                 className="rounded-full w-24 h-24"
               />
               <div className="flex justify-center items-center">
                 <p className="text-lg font-medium text-text-white">
-                  Howdy, Charles Robin
+                  {data.name}
                 </p>
               </div>
             </div>

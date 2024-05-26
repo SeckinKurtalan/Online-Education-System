@@ -10,42 +10,30 @@ import {
   FaTrash,
 } from "react-icons/fa";
 import ChapterCreateModal from "./ChapterCreateModal";
-
-const NewCourse = () => {
-  const data = {
-    courseTitle: "This is example Title",
-    courseDescription:
-      "Given the context and the error, it's likely that the issue arises from trying to render the courseAttachment state directly when it's a File object. This could happen if you have a line in your JSX that attempts to display courseAttachment directly, such as within a <p> tag or similar. For example, if there's a line like this:",
-    courseCategory: "Cryptocurrency",
-    courseChapters: [],
-    coursePrice: "198",
-  };
+import { createChapter, updateCourse } from "../../../../api/sign";
+const NewCourse = ({ courseId, header }) => {
+  const token = localStorage.getItem("token");
+  const [chapters, setChapters] = useState([]);
 
   const [isCreateModal, setIsCreateModal] = useState(false);
 
-  const [courseTitle, setCourseTitle] = useState(data.courseTitle || "");
+  const [courseTitle, setCourseTitle] = useState(header || "");
   const [isTitleEdit, setIsTitleEdit] = useState(false);
 
-  const [courseDescription, setCourseDescription] = useState(
-    data.courseDescription || ""
-  );
+  const [courseDescription, setCourseDescription] = useState("");
   const [isDescriptionEdit, setIsDescriptionEdit] = useState(false);
 
   const [courseImage, setCourseImage] = useState();
   const [isImageEdit, setIsImageEdit] = useState(false);
 
-  const [courseCategory, setCourseCategory] = useState(
-    data.courseCategory || ""
-  );
+  const [courseCategory, setCourseCategory] = useState("");
   const [isCategoryEdit, setIsCategoryEdit] = useState(false);
 
-  const [courseChapters, setCourseChapters] = useState(
-    data.courseChapters || []
-  );
+  const [courseChapters, setCourseChapters] = useState([]);
   const [chapter, setChapter] = useState("");
   const [isChapterEdit, setIsChapterEdit] = useState(false);
 
-  const [coursePrice, setCoursePrice] = useState(data.coursePrice || "");
+  const [coursePrice, setCoursePrice] = useState("");
   const [isPriceEdit, setIsPriceEdit] = useState(false);
 
   const [isAttachmentEdit, setIsAttachmentEdit] = useState(false);
@@ -89,7 +77,10 @@ const NewCourse = () => {
   return (
     <>
       {isCreateModal ? (
-        <ChapterCreateModal setIsCreateModal={setIsCreateModal} />
+        <ChapterCreateModal
+          setChaptersMain={setChapters}
+          setIsCreateModal={setIsCreateModal}
+        />
       ) : (
         <>
           <div className="mt-28">
@@ -97,7 +88,23 @@ const NewCourse = () => {
               <div className="absolute right-10">
                 <div className="flex gap-2">
                   <div className="bg-blue-600 text-center items-center flex text-text-white rounded-full">
-                    <button className="py-2 px-6">Publish</button>
+                    <button
+                      onClick={() => {
+                        console.log(chapters);
+                        updateCourse({
+                          courseId: courseId,
+                          token: token,
+                          title: courseTitle || "No title",
+                          description: courseDescription || "No description",
+                          category: courseCategory || "No category",
+                          price: coursePrice || "0",
+                        });
+                        localStorage.removeItem("chapters");
+                      }}
+                      className="py-2 px-6"
+                    >
+                      Publish
+                    </button>
                   </div>
                   <div>
                     <button className="bg-red-500 p-3  rounded-full">
@@ -217,7 +224,6 @@ const NewCourse = () => {
                         }}
                         onChange={(e) => {
                           setCourseImage(e.target.files[0]);
-                          console.log(e.target.files[0]);
                         }}
                       />
                     </div>
@@ -319,6 +325,10 @@ const NewCourse = () => {
                                 ...courseChapters,
                                 chapter === "" ? "No Named Chapter" : chapter,
                               ]);
+                              createChapter({
+                                courseId: courseId,
+                                title: chapter,
+                              });
                               setChapter("");
                               setIsChapterEdit(!isChapterEdit);
                             }}
@@ -429,7 +439,6 @@ const NewCourse = () => {
                           }}
                           onChange={(e) => {
                             setAttachment(e.target.files[0]);
-                            console.log(e.target.files[0]);
                           }}
                         />
                       </div>

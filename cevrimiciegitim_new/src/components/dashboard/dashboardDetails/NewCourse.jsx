@@ -204,7 +204,6 @@ const NewCourse = () => {
                         }}
                         onChange={(e) => {
                           setCourseImage(e.target.files[0]);
-                          console.log(e.target.files[0]);
                         }}
                       />
                     </div>
@@ -416,7 +415,6 @@ const NewCourse = () => {
                           }}
                           onChange={(e) => {
                             setAttachment(e.target.files[0]);
-                            console.log(e.target.files[0]);
                           }}
                         />
                       </div>

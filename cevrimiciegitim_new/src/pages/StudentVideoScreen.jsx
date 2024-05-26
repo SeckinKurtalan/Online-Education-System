@@ -8,7 +8,6 @@ import Certificate from "../components/studentVideoScreen/Certificate";
 
 const StudentVideoScreen = () => {
   const data = courses.courses[0];
-  console.log("data", data);
 
   const [certificatePage, setCertificatePage] = useState(false);
   return (

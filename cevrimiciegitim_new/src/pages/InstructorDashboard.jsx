@@ -34,7 +34,6 @@ const InstructorDashboard = () => {
   const token = localStorage.getItem("token");
   const x = async () => {
     const data1 = await getUser(token);
-    console.log("sads", data1);
     setData(data1);
   };
 
@@ -50,7 +49,6 @@ const InstructorDashboard = () => {
 
   function setPage(page) {
     setCurrentPage(page);
-    console.log(currentPage);
   }
 
   return (

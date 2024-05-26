@@ -19,11 +19,6 @@ export const useUserStore = create((set: any) => ({
       id: decoded.sub.split(" ")[0],
       role: decoded.sub.split(" ")[1],
     });
-    console.log(
-      "decoded",
-      decoded.sub.split(" ")[0],
-      decoded.sub.split(" ")[1]
-    );
     localStorage.setItem("token", token);
     localStorage.setItem("id", decoded.sub.split(" ")[0]);
     localStorage.setItem("role", decoded.sub.split(" ")[1]);

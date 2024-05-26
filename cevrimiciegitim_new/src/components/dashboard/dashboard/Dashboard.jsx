@@ -17,16 +17,17 @@ import { useState } from "react";
 import NewCourse from "./components/NewCourse";
 import { getUser } from "../../../api/sign";
 import { useEffect } from "react";
+import { createCourse } from "../../../api/sign";
 const Dashboard = () => {
   const [courseTitleMain, setCourseTitleMain] = useState("Default Title");
   const [isNewCourse, setIsNewCourse] = useState(false);
   const [isNewCourseModal, setIsNewCourseModal] = useState(false);
+  const [courseId, setCourseId] = useState("");
 
   const [data, setData] = useState([]);
   const token = localStorage.getItem("token");
   const x = async () => {
     const data1 = await getUser(token);
-    console.log("sads", data1);
     setData(data1);
   };
 
@@ -73,7 +74,7 @@ const Dashboard = () => {
           <p className="text-sm text-gray-500 mb-4">
             This will be the name of your course
           </p>
-          <form>
+          <div>
             <div className="mb-1">
               <label className="block text-sm font-medium text-gray-700">
                 Course Title
@@ -90,7 +91,6 @@ const Dashboard = () => {
             </div>
 
             <button
-              type="submit"
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
               onClick={() => {
                 // AWAIT DATA_BASE INSERTION
@@ -99,6 +99,12 @@ const Dashboard = () => {
                   setIsNewCourse(!isNewCourse);
                   setIsNewCourseModal(!isNewCourseModal);
                   setCourseTitleMain(courseTitle);
+                  (async () => {
+                    const response = await createCourse(token, {
+                      title: courseTitle,
+                    });
+                    setCourseId(response.id);
+                  })();
                 }
               }}
             >
@@ -110,7 +116,7 @@ const Dashboard = () => {
             >
               Cancel
             </button>
-          </form>
+          </div>
         </div>
       </div>
     );
@@ -119,7 +125,7 @@ const Dashboard = () => {
   return (
     <div className="relative w-full">
       {isNewCourse ? (
-        <NewCourse />
+        <NewCourse courseId={courseId} header={courseTitleMain} />
       ) : (
         <>
           <div className="flex-1  p-20 mt-8 ">

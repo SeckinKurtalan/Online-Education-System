@@ -130,7 +130,6 @@ const MyQuizAttempts = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log("User Answers:", answers);
     alert("Quiz submitted! Check the console for results.");
     setSelectedQuiz(null); // Close modal after submit
   };

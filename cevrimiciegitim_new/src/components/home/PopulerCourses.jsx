@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import OnlineCourse from "../../assets/online-course.png";
 import { FaRegClock, FaUser, FaStar } from "react-icons/fa";
@@ -6,6 +6,7 @@ import InstructorPhoto from "../../assets/instructor-profile-icon.svg";
 import CourseCard from "../common/CourseCard";
 import categoriesJson from "../../data/categories.json";
 import coursesJson from "../../data/courses.json";
+import { paginateCourses } from "../../api/sign";
 
 const PopularCourses = () => {
   const navigate = useNavigate(); // navigate hooks'u bileşenin içinde tanımlanmalı
@@ -13,11 +14,35 @@ const PopularCourses = () => {
   const redirectToCourseDetail = () => {
     navigate("/coursedetail"); // navigate hooks'u doğrudan kullanılabilir
   };
+  const [activeCategory, setActiveCategory] = useState("");
 
   const categories = categoriesJson.categories.map((category) => category.name);
 
-  console.log(coursesJson.courses);
-  const courses = [];
+  const [courses, setCourses] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      console.log(activeCategory);
+      const response = await paginateCourses({
+        page: 1,
+        limit: 100,
+        category: activeCategory,
+      });
+      setCourses(
+        response.map((course) => {
+          return {
+            title: course.title,
+            rating: Math.floor(Math.random() * 4) + 1,
+            instructor: course.creator.name,
+            category: course.category,
+            lessons: Math.floor(Math.random() * 3) + 1,
+            studentCount: Math.floor(Math.random() * 100),
+          };
+        })
+      );
+    })();
+  }, [activeCategory]);
+
   coursesJson.courses.forEach((course) => {
     courses.push({
       title: course.title,
@@ -28,8 +53,6 @@ const PopularCourses = () => {
       studentCount: course.studentCount,
     });
   });
-
-  const [activeCategory, setActiveCategory] = useState("");
 
   const redirectToCourses = (category) => {
     navigate("/courses", { state: { category } });

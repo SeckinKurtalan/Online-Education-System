@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import team1 from "../../../assets/team-1.jpeg";
 import NewCourse from "./components/NewCourse";
+import { paginateCourses } from "../../../api/sign";
 
 const MyCourses = () => {
-  const data = [
+  /*  const data = [
     {
       id: "1",
       courseTitle: "This is example Title",
@@ -64,23 +65,41 @@ const MyCourses = () => {
       coursePrice: "99",
       courseImage: team1,
     },
-  ];
+  ]; */
 
+  const token = localStorage.getItem("token");
+
+  const [data, setData] = useState([
+    {
+      id: "6",
+      courseTitle: "Digital Marketing 101",
+      courseDescription:
+        "Explore the fundamentals of digital marketing, including SEO, social media marketing, and email marketing.",
+      courseCategory: "Marketing",
+      courseChapters: [],
+      coursePrice: "99",
+      courseImage: team1,
+    },
+  ]);
   const [isEdit, setIsEdit] = useState(false);
   const [selectedId, setSelectedId] = useState("");
 
+  useEffect(() => {
+    (async () => {
+      const response = await paginateCourses({ page: 1, limit: 100, token });
+      setData(response);
+    })();
+  }, []);
+
   const handleDeleteCourse = (id) => {
-    console.log("Delete course with id: ", id);
     alert("Delete course with id: " + id);
   };
 
   const handleUnpublishCourse = (id) => {
-    console.log("Unpublish course with id: ", id);
     alert("Unpublish course with id: " + id);
   };
 
   const handleEditCourse = (id) => {
-    console.log("Edit course with id: ", id);
     setSelectedId(id);
     setIsEdit(true);
     setSelectedId(id);
@@ -103,23 +122,21 @@ const MyCourses = () => {
                 >
                   <img
                     className="w-full px-10 pt-10 rounded-md"
-                    src={course.courseImage}
+                    src={team1}
                     alt="Course"
                   />
                   <div className="px-6 py-4 text-center">
-                    <div className="font-bold text-xl mb-2">
-                      {course.courseTitle}
-                    </div>
+                    <div className="font-bold text-xl mb-2">{course.title}</div>
                     <p className="text-gray-700 text-base">
-                      {course.courseDescription}
+                      {course.description}
                     </p>
                   </div>
                   <div className="px-6 pt-4 pb-2">
                     <span className="inline-block bg-gray-700 rounded-full px-3 py-1 text-sm font-semibold text-gray-200 mr-2 mb-2">
-                      #{course.courseCategory}
+                      #{course.category}
                     </span>
                     <span className="inline-block bg-green-800 rounded-full px-3 py-1 text-sm font-semibold text-green-200 mr-2 mb-2">
-                      ${course.coursePrice}
+                      ${course.price}
                     </span>
                   </div>
                   <div className="flex justify-between w-full">

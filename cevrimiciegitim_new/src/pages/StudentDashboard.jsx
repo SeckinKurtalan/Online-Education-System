@@ -23,19 +23,24 @@ import MyQuizAttempts from "../components/studentDashboard/MyQuizAttempts";
 import Favorites from "../components/studentDashboard/Favorites";
 import EnrolledCourses from "../components/studentDashboard/EnrolledCourses";
 import Reviews from "../components/studentDashboard/Reviews";
+import { getUser } from "../api/sign";
+import { useEffect } from "react";
 
 const InstructorDashboard = () => {
+  const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState("Dashboard");
-
-  const data = {
-    name: "Charles Robin",
-    email: "charlesrobin@gmail.com",
-    photo: maleMentor,
+  const token = localStorage.getItem("token");
+  const x = async () => {
+    const data1 = await getUser(token);
+    setData(data1);
   };
+
+  useEffect(() => {
+    x();
+  }, []);
 
   function setPage(page) {
     setCurrentPage(page);
-    console.log(currentPage);
   }
 
   return (

@@ -5,7 +5,7 @@ import certificate from "../../assets/certificate.png";
 
 const Certificate = ({ data }) => {
   const { title, instructorName, lessons } = data;
-  const studentName = "Ako T";
+  const studentName = "Seckin K";
   const certificateContent = `Bu sertifika, ${studentName} adlı öğrenciye ${title} kursunu başarıyla tamamladığını belirtmektedir.`;
 
   const certificateRef = useRef(null);

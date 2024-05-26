@@ -4,229 +4,41 @@ import { useLocation } from "react-router-dom";
 import CourseCard from "../components/common/CourseCard";
 import OnlineCourse from "../assets/online-course.png";
 import InstructorPhoto from "../assets/team-5.jpeg";
+import { useEffect } from "react";
+import { paginateCourses } from "../api/sign";
 
 const Courses = () => {
+  const [courses, setCourses] = useState([]);
   const location = useLocation();
   const stateCategory = location.state.category;
 
-  const courses = [
-    {
-      title: "Introducting to Software Engineering",
-      instructor: "Mark Smith",
-      duration: "3 weeks",
-      lessons: 8,
-      students: 20,
-      rating: 4, // Eklenen yıldız derecelendirmesi
-      category: "art",
-    },
-    {
-      title: "Enchancing Adobe Photoshop CC 2020 Skills",
-      instructor: "John Doe",
-      duration: "4 weeks",
-      lessons: 6,
-      students: 15,
-      rating: 5, // Eklenen yıldız derecelendirmesi
-      category: "art",
-    },
-    {
-      title: "Mastering React Native",
-      instructor: "Jane Doe",
-      duration: "5 weeks",
-      lessons: 10,
-      students: 25,
-      rating: 3, // Eklenen yıldız derecelendirmesi
-      category: "art",
-    },
-    {
-      title: "The Complete Web Development Bootcamp",
-      instructor: "Alice Johnson",
-      duration: "2 weeks",
-      lessons: 12,
-      students: 18,
-      rating: 4, // Eklenen yıldız derecelendirmesi
-      category: "art",
-    },
-    {
-      title: "The Complete JavaScript Course 2022: From Zero",
-      instructor: "Bob Brown",
-      duration: "6 weeks",
-      lessons: 7,
-      students: 22,
-      rating: 5, // Eklenen yıldız derecelendirmesi
-      category: "marketing",
-    },
-    {
-      title: "The Complete React Native + Hooks Course [2021 Edition]",
-      instructor: "Emma Wilson",
-      duration: "4 weeks",
-      lessons: 9,
-      students: 19,
-      rating: 4, // Eklenen yıldız derecelendirmesi
-      category: "marketing",
-    },
-    {
-      title: "The Complete JavaScript Course 2022: From Zero",
-      instructor: "Bob Brown",
-      duration: "6 weeks",
-      lessons: 7,
-      students: 22,
-      rating: 5, // Eklenen yıldız derecelendirmesi
-      category: "marketing",
-    },
-    {
-      title: "The Complete React Native + Hooks Course [2021 Edition]",
-      instructor: "Emma Wilson",
-      duration: "4 weeks",
-      lessons: 9,
-      students: 19,
-      rating: 4, // Eklenen yıldız derecelendirmesi
-      category: "marketing",
-    },
-    {
-      title: "The Complete JavaScript Course 2022: From Zero",
-      instructor: "Bob Brown",
-      duration: "6 weeks",
-      lessons: 7,
-      students: 22,
-      rating: 5, // Eklenen yıldız derecelendirmesi
-      category: "music",
-    },
-    {
-      title: "The Complete React Native + Hooks Course [2021 Edition]",
-      instructor: "Emma Wilson",
-      duration: "4 weeks",
-      lessons: 9,
-      students: 19,
-      rating: 4, // Eklenen yıldız derecelendirmesi
-      category: "music",
-    },
-    {
-      title: "The Complete JavaScript Course 2022: From Zero",
-      instructor: "Bob Brown",
-      duration: "6 weeks",
-      lessons: 7,
-      students: 22,
-      rating: 5, // Eklenen yıldız derecelendirmesi
-      category: "music",
-    },
-    {
-      title: "The Complete React Native + Hooks Course [2021 Edition]",
-      instructor: "Emma Wilson",
-      duration: "4 weeks",
-      lessons: 9,
-      students: 19,
-      rating: 4, // Eklenen yıldız derecelendirmesi
-      category: "music",
-    },
-    {
-      title: "Introducting to Software Engineering",
-      instructor: "Mark Smith",
-      duration: "3 weeks",
-      lessons: 8,
-      students: 20,
-      rating: 4, // Eklenen yıldız derecelendirmesi
-      category: "art",
-    },
-    {
-      title: "Enchancing Adobe Photoshop CC 2020 Skills",
-      instructor: "John Doe",
-      duration: "4 weeks",
-      lessons: 6,
-      students: 15,
-      rating: 5, // Eklenen yıldız derecelendirmesi
-      category: "art",
-    },
-    {
-      title: "Mastering React Native",
-      instructor: "Jane Doe",
-      duration: "5 weeks",
-      lessons: 10,
-      students: 25,
-      rating: 3, // Eklenen yıldız derecelendirmesi
-      category: "art",
-    },
-    {
-      title: "The Complete Web Development Bootcamp",
-      instructor: "Alice Johnson",
-      duration: "2 weeks",
-      lessons: 12,
-      students: 18,
-      rating: 4, // Eklenen yıldız derecelendirmesi
-      category: "art",
-    },
-    {
-      title: "The Complete JavaScript Course 2022: From Zero",
-      instructor: "Bob Brown",
-      duration: "6 weeks",
-      lessons: 7,
-      students: 22,
-      rating: 5, // Eklenen yıldız derecelendirmesi
-      category: "marketing",
-    },
-    {
-      title: "The Complete React Native + Hooks Course [2021 Edition]",
-      instructor: "Emma Wilson",
-      duration: "4 weeks",
-      lessons: 9,
-      students: 19,
-      rating: 4, // Eklenen yıldız derecelendirmesi
-      category: "marketing",
-    },
-    {
-      title: "The Complete JavaScript Course 2022: From Zero",
-      instructor: "Bob Brown",
-      duration: "6 weeks",
-      lessons: 7,
-      students: 22,
-      rating: 5, // Eklenen yıldız derecelendirmesi
-      category: "marketing",
-    },
-    {
-      title: "The Complete React Native + Hooks Course [2021 Edition]",
-      instructor: "Emma Wilson",
-      duration: "4 weeks",
-      lessons: 9,
-      students: 19,
-      rating: 4, // Eklenen yıldız derecelendirmesi
-      category: "marketing",
-    },
-    {
-      title: "The Complete JavaScript Course 2022: From Zero",
-      instructor: "Bob Brown",
-      duration: "6 weeks",
-      lessons: 7,
-      students: 22,
-      rating: 5, // Eklenen yıldız derecelendirmesi
-      category: "music",
-    },
-    {
-      title: "The Complete React Native + Hooks Course [2021 Edition]",
-      instructor: "Emma Wilson",
-      duration: "4 weeks",
-      lessons: 9,
-      students: 19,
-      rating: 4, // Eklenen yıldız derecelendirmesi
-      category: "music",
-    },
-    {
-      title: "The Complete JavaScript Course 2022: From Zero",
-      instructor: "Bob Brown",
-      duration: "6 weeks",
-      lessons: 7,
-      students: 22,
-      rating: 5, // Eklenen yıldız derecelendirmesi
-      category: "music",
-    },
-    {
-      title: "The Complete React Native + Hooks Course [2021 Edition]",
-      instructor: "Emma Wilson",
-      duration: "4 weeks",
-      lessons: 9,
-      students: 19,
-      rating: 4, // Eklenen yıldız derecelendirmesi
-      category: "music",
-    },
-  ];
+  const [activeCategory, setActiveCategory] = useState(stateCategory);
+
+  useEffect(() => {
+    if (activeCategory === "All Courses") {
+      setActiveCategory("");
+    }
+    (async () => {
+      const response = await paginateCourses({
+        page: 1,
+        limit: 100,
+        category: activeCategory,
+        token: null,
+      });
+      setCourses(
+        response.map((course) => {
+          return {
+            title: course.title,
+            rating: Math.floor(Math.random() * 4) + 1,
+            instructor: course.creator.name,
+            category: course.category,
+            lessons: Math.floor(Math.random() * 4) + 1,
+            studentCount: Math.floor(Math.random() * 100),
+          };
+        })
+      );
+    })();
+  }, [activeCategory]);
 
   const categories = [
     "All Courses",
@@ -248,7 +60,6 @@ const Courses = () => {
     "Latest",
   ];
 
-  const [activeCategory, setActiveCategory] = useState(stateCategory);
   const [courseCount, setCourseCount] = useState(8);
 
   return (

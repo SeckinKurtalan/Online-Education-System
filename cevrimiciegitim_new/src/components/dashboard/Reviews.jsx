@@ -1,11 +1,24 @@
 import React from "react";
 import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 import maleMentor from "../../assets/male-mentor.jpeg";
+import { getUser } from "../../api/sign";
+import { useEffect, useState } from "react";
 
 const CoursesWithReviews = () => {
+  const [data, setData] = useState([]);
+  const token = localStorage.getItem("token");
+  const x = async () => {
+    const data1 = await getUser(token);
+    setData(data1);
+  };
+
+  useEffect(() => {
+    x();
+  }, []);
+
   const instructor = {
-    name: "Charles Robin",
-    image: maleMentor,
+    name: data.name,
+    image: data.photo,
     rating: 4.5,
     reviews: [
       {

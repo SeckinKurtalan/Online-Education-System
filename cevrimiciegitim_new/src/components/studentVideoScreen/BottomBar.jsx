@@ -111,7 +111,6 @@ const BottomBar = ({ data, setCertificatePage }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle comment submission logic here
-    console.log("Comment submitted:", comment);
     setComment("");
   };
   const Reviews = ({ data }) => (

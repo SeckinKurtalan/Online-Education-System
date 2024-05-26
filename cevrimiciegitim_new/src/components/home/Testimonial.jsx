@@ -11,7 +11,6 @@ export const Testimonial = () => {
     students.students[1],
     students.students[2],
   ];
-  console.log(data);
   return (
     <>
       <div>

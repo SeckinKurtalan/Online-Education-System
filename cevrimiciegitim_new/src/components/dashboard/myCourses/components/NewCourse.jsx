@@ -13,7 +13,6 @@ import ChapterCreateModal from "./ChapterCreateModal";
 import team1 from "../../../../assets/team-1.jpeg";
 
 const NewCourse = ({ selectedId }) => {
-  console.log("selectedId ", selectedId);
   const selectedData = [
     {
       id: "1",
@@ -273,7 +272,6 @@ const NewCourse = ({ selectedId }) => {
                         }}
                         onChange={(e) => {
                           setCourseImage(e.target.files[0]);
-                          console.log(e.target.files[0]);
                         }}
                       />
                     </div>
@@ -485,7 +483,6 @@ const NewCourse = ({ selectedId }) => {
                           }}
                           onChange={(e) => {
                             setAttachment(e.target.files[0]);
-                            console.log(e.target.files[0]);
                           }}
                         />
                       </div>
