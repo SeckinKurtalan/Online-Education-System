@@ -81,14 +81,17 @@ public class UserManager extends Utility implements UserService {
             if (dto.getEmail() != null) {
                 updateUser.setEmail(dto.getEmail());
             }
-            if (dto.getPassword() != null) {
-                updateUser.setPassword(dto.getPassword()); // No password hashing
-            }
             if (dto.getPhotoLink() != null) {
                 updateUser.setPhoto(dto.getPhotoLink());
             }
             if(dto.getGender() != null){
                 updateUser.setGender(dto.getGender());
+            }
+            if(dto.getLocation() != null){
+                updateUser.setLocation(dto.getLocation());
+            }
+            if(dto.getDateOfBirth() != null){
+                updateUser.setDateOfBirth(dto.getDateOfBirth());
             }
 
             return userDal.save(updateUser);
