@@ -6,6 +6,7 @@ import com.egeuniversity.onlineeducationsystem.Service.abstracts.UserService;
 import com.egeuniversity.onlineeducationsystem.data.User;
 import com.egeuniversity.onlineeducationsystem.dto.UserDTO;
 import com.egeuniversity.onlineeducationsystem.dto.UserSearchDTO;
+import com.egeuniversity.onlineeducationsystem.utility.Utility;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,23 +25,12 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/{id}")
+    @GetMapping()
     @Operation(summary = "Get User By Id")
-    public ResponseEntity<User> getUser(@PathVariable Long id) {
+    public ResponseEntity<User> getUser() {
         try {
-            User user = userService.getUser(id);
+            User user = userService.getUser();
             return ResponseEntity.ok(user);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @PostMapping()
-    @Operation(summary = "Add User")
-    public ResponseEntity<User> addUser(@RequestBody UserDTO dto) {
-        try {
-            User savedUser = userService.addUser(convertDtoToData(dto));
-            return ResponseEntity.ok(savedUser);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -57,11 +47,11 @@ public class UserController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping()
     @Operation(summary = "Update User By Id")
-    public ResponseEntity<User> updateUser(@PathVariable(value = "id") Long id, @RequestBody UserDTO dto ) {
+    public ResponseEntity<User> updateUser(@RequestBody UserDTO dto ) {
         try {
-            User updatedUser = userService.updateUser(id, dto);
+            User updatedUser = userService.updateUser(Utility.getUserIdFromToken(), dto);
             return ResponseEntity.ok(updatedUser);
         } catch (GenericException ge) {
             throw ge;
@@ -81,12 +71,11 @@ public class UserController {
         }
     }
 
-    @PutMapping("/{id}/upload-photo")
+    @PutMapping("/upload-photo")
     @Operation(summary = "Upload User Photo")
-    public ResponseEntity<String> uploadPhoto(@PathVariable(value = "id") Long id,
-                                              @RequestParam("photo") MultipartFile photo) {
+    public ResponseEntity<String> uploadPhoto(@RequestParam("photo") MultipartFile photo) {
         try {
-            String[] response = userService.handleFileUpload(id, photo).split(",");
+            String[] response = userService.handleFileUpload(photo).split(",");
             return ResponseEntity.ok("Photo uploaded successfully with the link:  " + response[1] + ", for the user: " + response[0]);
         } catch (GenericException ge) {
             throw ge;
@@ -131,7 +120,6 @@ public class UserController {
         User user = new User();
         user.setName(dto.getName());
         user.setEmail(dto.getEmail());
-        user.setPassword(dto.getPassword());
         return user;
     }
 

@@ -2,6 +2,7 @@ package com.egeuniversity.onlineeducationsystem.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,9 +10,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Entity(name = "courses")
@@ -43,6 +42,9 @@ public class Course {
     @Column(name = "price")
     private Double price;
 
+    @Column(name = "course_photo")
+    private String coursePhoto;
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at")
     private Date createdAt;
@@ -54,6 +56,10 @@ public class Course {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
+
+    @JsonProperty("course_chapters")
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CourseChapter> chapters = new ArrayList<>();
 
     @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY)

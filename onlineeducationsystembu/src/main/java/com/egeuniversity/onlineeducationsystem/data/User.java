@@ -1,5 +1,6 @@
 package com.egeuniversity.onlineeducationsystem.data;
 
+import com.egeuniversity.onlineeducationsystem.data.Enum.Gender;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,6 +30,16 @@ public class User extends BaseEntity{
     private String name;
 
     private String email;
+
+    @Column(name = "gender")
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
+    private Date dateOfBirth;
+
+    private String location;
+
+    private String phoneNumber;
 
     private String password;
 

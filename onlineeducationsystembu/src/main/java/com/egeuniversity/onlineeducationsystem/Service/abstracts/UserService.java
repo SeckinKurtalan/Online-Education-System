@@ -14,13 +14,13 @@ public interface UserService {
 
     void removeUser(Long userId);
 
-    User getUser(Long userId);
+    User getUser();
 
     User updateUser(Long id, UserDTO dto);
 
     Page<User> listUsers(UserSearchDTO dto) throws Exception;
 
-    String handleFileUpload(Long id, MultipartFile file) throws IOException;
+    String handleFileUpload(MultipartFile file) throws IOException;
 
     User signup(UserDTO userDTO);
 

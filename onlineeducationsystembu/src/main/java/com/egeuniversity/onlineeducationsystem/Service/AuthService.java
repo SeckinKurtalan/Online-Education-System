@@ -86,7 +86,7 @@ public class AuthService {
         Role role = null;
 
         if (strRole == null)
-            return ResponseEntity.badRequest().body(new MessageResponse("Error: Roles can not be null!"));
+            role = roleRepository.findByName(ERole.ROLE_USER).orElse(null);
         else {
             role = switch (strRole) {
                 case "admin" -> roleRepository.findByName(ERole.ROLE_ADMIN).orElse(null);

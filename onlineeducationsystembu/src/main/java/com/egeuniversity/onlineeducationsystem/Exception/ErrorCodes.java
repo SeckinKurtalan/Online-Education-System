@@ -28,6 +28,9 @@ public class ErrorCodes {
     public static final String E24_CODE = "E24";
     public static final String E25_CODE = "E25";
     public static final String E26_CODE = "E26";
+    public static final String E27_CODE = "E27";
+    public static final String E28_CODE = "E28";
+    public static final String E29_CODE = "E29";
 
     public static final String E1_MESSAGE = "Unknown fields found: ";
     public static final String E2_MESSAGE = "Invalid parameters sent.";
@@ -55,4 +58,7 @@ public class ErrorCodes {
     public static final String E24_MESSAGE = "An error occured while adding the user to the course.";
     public static final String E25_MESSAGE = "Cannot set user authentication.";
     public static final String E26_MESSAGE = "Error: Invalid {%s} number. {%s} must be greater than 0.";
+    public static final String E27_MESSAGE = "Course not found";
+    public static final String E28_MESSAGE = "One or more %s were not found with the given IDs, or duplicate %s IDs were provided.";
+    public static final String E29_MESSAGE = "Error on chapter endpoint.";
 }

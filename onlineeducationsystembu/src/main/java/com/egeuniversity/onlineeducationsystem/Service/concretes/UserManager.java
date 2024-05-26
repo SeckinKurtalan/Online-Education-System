@@ -34,9 +34,10 @@ public class UserManager extends Utility implements UserService {
     }
 
     @Override
-    public User getUser(Long userId) {
+    public User getUser() {
         try {
-            Optional<User> user = userDal.findById(userId);
+            Long id = Utility.getUserIdFromToken();
+            Optional<User> user = userDal.findById(id);
             if (user.isEmpty()) {
                 throw new RuntimeException("User Not Found");
             }
@@ -86,8 +87,9 @@ public class UserManager extends Utility implements UserService {
             if (dto.getPhotoLink() != null) {
                 updateUser.setPhoto(dto.getPhotoLink());
             }
-
-            updateUser.setUpdatedAt(getNow());
+            if(dto.getGender() != null){
+                updateUser.setGender(dto.getGender());
+            }
 
             return userDal.save(updateUser);
 
@@ -110,7 +112,6 @@ public class UserManager extends Utility implements UserService {
             if (dto.getEmail() != null) {
                 searchPredicates.add(criteriaBuilder.like(root.get("email"), "%" + dto.getEmail() + "%"));
             }
-
             return criteriaBuilder.and(searchPredicates.toArray(new Predicate[0]));
         };
 
@@ -127,9 +128,10 @@ public class UserManager extends Utility implements UserService {
     }
 
     @Override
-    public String handleFileUpload(Long id, MultipartFile file) throws IOException {
+    public String handleFileUpload(MultipartFile file) throws IOException {
+        Long id = Utility.getUserIdFromToken();
         String fileName = file.getOriginalFilename();
-        String saveDirectory = "/home/seckin/IdeaProjects/onlineeducationsystem/files/";
+        String saveDirectory = "/home/seckin/IdeaProjects/Online-Education-System/onlineeducationsystembu/files";
         File targetFile = new File(saveDirectory + fileName);
 
         file.transferTo(targetFile);

@@ -13,7 +13,8 @@ public class CourseSearchDTO {
     private String category;
     private Double price;
     private String creatorId;
-    private int page;
-    private int size;
+    private int page=1;
+    private int size=10;
+    private boolean getAllCoursesCreatedByTheTheUser = false;
 
 }
