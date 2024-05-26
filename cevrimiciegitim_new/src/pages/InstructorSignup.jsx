@@ -77,14 +77,23 @@ const InstructorSignup = () => {
               </div>
               <div className="flex justify-between items-center mb-4">
                 <button
-                  onClick={() => {
-                    signUpFunc({
-                      email: email,
-                      password: password,
-                      name: fullName,
-                      role: [Role.ROLE_ADMIN],
-                    });
-                  }}
+                  onClick={() =>
+                    (async () => {
+                      const isSignUp = await signUpFunc({
+                        email: email,
+                        password: password,
+                        name: fullName,
+                        role: [Role.USER],
+                      });
+                      console.log(isSignUp);
+                      if (isSignUp === "Success") {
+                        alert("Successfully Created");
+                        navigate("/signin");
+                      } else {
+                        alert("Can't create");
+                      }
+                    })()
+                  }
                   type="submit"
                   className="w-full py-2 px-4 bg-indigo-500 hover:bg-indigo-700 rounded-lg text-white font-medium text-center"
                 >

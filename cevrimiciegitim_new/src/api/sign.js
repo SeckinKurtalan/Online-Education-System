@@ -8,7 +8,7 @@ export const signUpFunc = async (data) => {
         "Content-Type": "application/json",
       },
     });
-    console.log("Success");
+    return "Success";
   } catch (error) {
     if (error.response) {
       // The request was made and the server responded with a status code
@@ -24,7 +24,7 @@ export const signUpFunc = async (data) => {
       // Something happened in setting up the request that triggered an Error
       console.error("Error creating student:", error.message);
     }
-    throw error;
+    return "Error";
   }
 };
 
