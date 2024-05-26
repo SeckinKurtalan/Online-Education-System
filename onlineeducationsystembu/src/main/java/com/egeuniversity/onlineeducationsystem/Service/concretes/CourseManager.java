@@ -204,7 +204,7 @@ public class CourseManager implements CourseService {
                     });
                 }
 
-                existingCourse.setUpdatedAt(getNow());
+                //existingCourse.setUpdatedAt(getNow());
 
                 return courseDal.save(existingCourse);
             } else {
